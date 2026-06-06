@@ -1,0 +1,97 @@
+{
+  "video_id": "video_001",
+  "_help": {
+    "type": "qa | verify | temporal",
+    "expect_found": "true/false — câu trả lời có grounded không (qa)",
+    "expect_keywords_any": "PASS nếu câu trả lời chứa ÍT NHẤT 1 từ trong list",
+    "expect_keywords_all": "PASS nếu chứa TẤT CẢ các từ",
+    "expect_time_contains": "list giây — evidence phải phủ gần các mốc này (±tol)",
+    "expect_result": "verify: verified | not_supported | warning",
+    "expect_count_min": "temporal: số match tối thiểu",
+    "note": "ghi chú ground-truth của bạn (chỗ đối chiếu)"
+  },
+  "tolerance_sec": 8,
+  "cases": [
+    {
+      "id": "q1", "type": "qa",
+      "question": "Người dẫn demo sản phẩm nào ở phút đầu?",
+      "expect_found": true,
+      "expect_keywords_any": ["dưỡng da", "serum", "tẩy trang", "nắp", "skincare", "chai"],
+      "expect_time_contains": [25, 45],
+      "note": "Phút đầu host giới thiệu bộ dưỡng da nắp xanh/hồng/tím."
+    },
+    {
+      "id": "q2", "type": "qa",
+      "question": "Tìm mọi lần xuất hiện chữ FREE SHIP.",
+      "expect_found": false,
+      "note": "Video KHÔNG có chữ FREE SHIP literal -> phải từ chối trung thực."
+    },
+    {
+      "id": "q3", "type": "qa",
+      "question": "Khi nào người dẫn báo giá?",
+      "expect_found": true,
+      "expect_keywords_any": ["254", "giá", "00:", "₫", "đ"],
+      "expect_time_contains": [5, 49],
+      "note": "Báo giá nhiều lần; giá nổi bật 254.800đ."
+    },
+    {
+      "id": "q4", "type": "qa",
+      "question": "Sản phẩm nào được cầm lên trước camera?",
+      "expect_found": true,
+      "expect_keywords_any": ["chai", "nắp", "bottle", "serum"],
+      "note": "Host cầm chai nắp xanh dương lên trước."
+    },
+    {
+      "id": "q5", "type": "qa",
+      "question": "Tìm các đoạn có nhắc giảm giá.",
+      "expect_found": true,
+      "expect_keywords_any": ["giảm", "%", "25", "31", "discount"],
+      "note": "Nhiều badge -31%, Giảm 25%/30%."
+    },
+    {
+      "id": "q6", "type": "qa",
+      "question": "Có lúc nào người dẫn nói miễn phí vận chuyển không?",
+      "expect_found": false,
+      "note": "Host KHÔNG nói miễn phí vận chuyển (transcript xác nhận)."
+    },
+    {
+      "id": "q7", "type": "qa",
+      "question": "Có lúc nào người dẫn nói chính hãng không?",
+      "expect_found": true,
+      "expect_keywords_any": ["chính hãng", "chuẩn", "quốc tế", "hàng", "authentic"],
+      "note": "Overlay 'Hàng quốc tế đảm bảo chuẩn' xuất hiện nhiều lần (w_012/15/21/32); KHÔNG ràng buộc giây cứng vì model chọn window khác nhau mỗi lần."
+    },
+    {
+      "id": "q8", "type": "qa",
+      "question": "Sản phẩm nào được nhắc nhiều nhất?",
+      "expect_found": true,
+      "expect_keywords_any": ["serum", "tím", "melacell", "niacinamide"],
+      "note": "Ground-truth occurrences: sku_2 (serum tím) = 22 lần (nhiều nhất)."
+    },
+    {
+      "id": "q9", "type": "qa",
+      "question": "Tóm tắt timeline bán hàng của video.",
+      "expect_found": true,
+      "expect_keywords_any": ["giá", "serum", "giảm", "00:", "dưỡng"],
+      "note": "Phải phủ toàn bộ video, không chỉ 1 đoạn."
+    },
+    {
+      "id": "q10_refuse", "type": "qa",
+      "question": "Người dẫn có nhắc tới tàu vũ trụ Hàn Quốc không?",
+      "expect_found": false,
+      "note": "Sanity check: nội dung không có -> phải từ chối."
+    },
+    {
+      "id": "v1", "type": "verify",
+      "claim": "sản phẩm này là hàng chính hãng",
+      "expect_result": "not_supported",
+      "note": "Có banner 'HÀNG QUỐC TẾ' nhưng KHÔNG có tem/giấy chứng nhận -> not_supported."
+    },
+    {
+      "id": "t1", "type": "temporal",
+      "entity_id": "sku_2", "business_event": "price_mention",
+      "expect_count_min": 1,
+      "note": "Serum tím khi đang hiển thị giá -> phải có >=1 match."
+    }
+  ]
+}

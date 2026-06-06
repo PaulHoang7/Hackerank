@@ -1,0 +1,36 @@
+# ── Secrets — NEVER commit ──
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+secrets/
+*credential*
+
+# ── Python ──
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+env/
+.pytest_cache/
+
+# ── Node / frontend ──
+node_modules/
+dist/
+build/
+.next/
+
+# ── Media & generated artifacts (don't commit source video / thumbnails) ──
+*.mp4
+*.mov
+*.avi
+*.hls
+thumbs/
+storage/
+*.log
+
+# ── OS / IDE ──
+.DS_Store
+.idea/
+.vscode/
